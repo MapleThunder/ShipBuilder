@@ -34,6 +34,23 @@ public class MouseManager : MonoBehaviour {
         GameObject GO = (GameObject)Instantiate(PrefabToSpawn, spawnSpot, spawnRotation);
         GO.transform.SetParent(theCollider.transform);
 
+        // To calculate mass, get a list of all the colliders in the new part.
+        Collider[] colliders = GO.transform.GetComponentsInChildren<Collider>();
+        float mass = 0;
+        foreach(Collider col in colliders)
+        {
+            int bitMaskForCollider = 1 << col.gameObject.layer;
+            if ((bitMaskForCollider & SnapPointLayerMask) == 0)
+            {
+                // This collider is NOT a snap point, so calculate it's mass contribution.
+                float volume = col.bounds.size.x * col.bounds.size.y * col.bounds.size.z;
+                mass += volume;
+            }
+
+        }
+
+        theCollider.transform.GetComponentInParent<Rigidbody>().mass += mass;
+
         // Disable the renderer on the snap point when something is created there.
         if (theCollider.GetComponent<Renderer>() != null)
             theCollider.GetComponent<Renderer>().enabled = false;

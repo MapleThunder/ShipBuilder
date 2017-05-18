@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 0a021ad0823431d46be2366a0048c0dc
-timeCreated: 1495125984
+guid: 3da03da62cff17c478313ed40b8c0c48
+timeCreated: 1495125785
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: BasicButton_0
+    21300000: EditModeButton_0
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -95,7 +95,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: BasicButton_0
+      name: EditModeButton_0
       rect:
         serializedVersion: 2
         x: 0

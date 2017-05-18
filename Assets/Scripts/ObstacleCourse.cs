@@ -12,16 +12,16 @@ public class ObstacleCourse : MonoBehaviour {
      *      MaxAngle                The maximum angle the checkpoints can be different from the previous.
      *      _Checkpoints            A list of all the checkpoints.
      *      activeCheckpointIndex   The index of the currently active checkpoint.
-     *      timeRemaining           The amount of time remaining to gain the discount.
      *      percentDiscount         The total percent discount earned.
+     *      _CM                     A copy of the camera manager to check the game mode.
      */
     float MinDistance = 50;
     float MaxDistance = 75;
     float MaxAngle = 10;
     List<Checkpoint> _Checkpoints;
     int activeCheckpointIndex;
-    float timeRemaining = 60;
     int percentDiscount = 0;
+    CameraManager _CM;
 
 
     /**
@@ -33,6 +33,7 @@ public class ObstacleCourse : MonoBehaviour {
      *      CheckpointInactiveMat   The material for an inactive checkpoint.
      *      CheckpointPassedMat     The material for a checkpoint that was successfully passed.
      *      VictoryPanel            The panel that will show when you finish the course.
+     *      TimeRemaining           The amount of time remaining to gain the discount.
      */
     public GameObject CheckPointPrefab;
     public GameObject CourseStart;
@@ -42,6 +43,7 @@ public class ObstacleCourse : MonoBehaviour {
     public Material CheckpointPassedMat;
     public GameObject VictoryPanel;
     public Camera theCamera;
+    public float TimeRemaining = 60.0f;
 
 
     /// <summary>
@@ -71,7 +73,7 @@ public class ObstacleCourse : MonoBehaviour {
         InactivateCheckpoint(cp);
         activeCheckpointIndex++;
         // Increment bonus if within the time limit.
-        if(timeRemaining > 0)
+        if(TimeRemaining > 0)
         {
             percentDiscount++;
         }
@@ -159,13 +161,15 @@ public class ObstacleCourse : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
     {
+        _CM = Camera.main.GetComponent<CameraManager>();
         SpawnCourse();
 	}
 	
 	// Update is called once per frame
 	void Update ()
     {
-		
+        if(_CM.Mode == Mode.Flight)
+            TimeRemaining -= Time.deltaTime;
 	}
 
     /// <summary>

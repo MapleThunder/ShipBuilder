@@ -34,6 +34,7 @@ public class ObstacleCourse : MonoBehaviour {
      *      CheckpointPassedMat     The material for a checkpoint that was successfully passed.
      *      VictoryPanel            The panel that will show when you finish the course.
      *      TimeRemaining           The amount of time remaining to gain the discount.
+     *      DiscountWonText         The text where the current discount shows in the HUD.
      */
     public GameObject CheckPointPrefab;
     public GameObject CourseStart;
@@ -44,6 +45,7 @@ public class ObstacleCourse : MonoBehaviour {
     public GameObject VictoryPanel;
     public Camera theCamera;
     public float TimeRemaining = 60.0f;
+    public Text DiscountWonText;
 
 
     /// <summary>
@@ -76,6 +78,7 @@ public class ObstacleCourse : MonoBehaviour {
         if(TimeRemaining > 0)
         {
             percentDiscount++;
+            DiscountWonText.text = "Discount: " + percentDiscount;
         }
 
         // Was that the last checkpoint ?

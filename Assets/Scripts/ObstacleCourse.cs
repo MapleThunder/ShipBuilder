@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ObstacleCourse : MonoBehaviour {
 
@@ -11,12 +12,16 @@ public class ObstacleCourse : MonoBehaviour {
      *      MaxAngle                The maximum angle the checkpoints can be different from the previous.
      *      _Checkpoints            A list of all the checkpoints.
      *      activeCheckpointIndex   The index of the currently active checkpoint.
+     *      timeRemaining           The amount of time remaining to gain the discount.
+     *      percentDiscount         The total percent discount earned.
      */
     float MinDistance = 50;
     float MaxDistance = 75;
     float MaxAngle = 10;
     List<Checkpoint> _Checkpoints;
     int activeCheckpointIndex;
+    float timeRemaining = 60;
+    int percentDiscount = 0;
 
 
     /**
@@ -27,6 +32,7 @@ public class ObstacleCourse : MonoBehaviour {
      *      CheckpointActiveMat     The material for an active checkpoint.
      *      CheckpointInactiveMat   The material for an inactive checkpoint.
      *      CheckpointPassedMat     The material for a checkpoint that was successfully passed.
+     *      VictoryPanel            The panel that will show when you finish the course.
      */
     public GameObject CheckPointPrefab;
     public GameObject CourseStart;
@@ -34,6 +40,8 @@ public class ObstacleCourse : MonoBehaviour {
     public Material CheckpointActiveMat;
     public Material CheckpointInactiveMat;
     public Material CheckpointPassedMat;
+    public GameObject VictoryPanel;
+    public Camera theCamera;
 
 
     /// <summary>
@@ -62,6 +70,12 @@ public class ObstacleCourse : MonoBehaviour {
         // Inactivate the checkpoint and increment the activeCheckpointIndex
         InactivateCheckpoint(cp);
         activeCheckpointIndex++;
+        // Increment bonus if within the time limit.
+        if(timeRemaining > 0)
+        {
+            percentDiscount++;
+        }
+
         // Was that the last checkpoint ?
         if(activeCheckpointIndex >= NumberOfCheckPoints)
         {
@@ -159,6 +173,14 @@ public class ObstacleCourse : MonoBehaviour {
     /// </summary>
     void Victory()
     {
+        CameraManager cm = theCamera.GetComponent<CameraManager>();
+        cm.SetMode(Mode.Menu);
+        VictoryPanel.SetActive(true);
 
+        Text txt = GameObject.Find("DiscountText").GetComponent<Text>();
+        if(percentDiscount == 8)
+            txt.text = "You won an " + percentDiscount + " discount !";
+        else
+            txt.text = "You won a " + percentDiscount + " discount !";
     }
 }

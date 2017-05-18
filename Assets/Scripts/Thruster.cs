@@ -9,6 +9,7 @@ public class Thruster : KeybindableComponent {
      *      _ShipRigidbody      The rigidbody of the root ship.
      */
     Rigidbody _ShipRigidbody;
+    CameraManager _CM;
 
     /**
      *  Public Properties:
@@ -32,7 +33,7 @@ public class Thruster : KeybindableComponent {
             return;
         }
 
-        if(Input.GetKey(keyCode))
+        if(Input.GetKey(keyCode) && _CM.Mode == Mode.Flight)
         {
             // Applying thrust
             Vector3 theForce = -this.transform.forward * ThrusterStrength;
@@ -62,6 +63,7 @@ public class Thruster : KeybindableComponent {
     void Start ()
     {
 		_ShipRigidbody = this.transform.root.GetComponent<Rigidbody>();
+        _CM = Camera.main.GetComponent<CameraManager>();
     }
 
 }

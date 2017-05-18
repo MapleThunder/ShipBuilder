@@ -35,7 +35,7 @@ public class CameraManager : MonoBehaviour {
     public float ZoomMultiplier = 2;
     public bool InvertZoom = false;
     public float PanSpeed = 0.1f;
-    
+    public Mode Mode { get { return _CurrentMode; } }
 
 
     /// <summary>

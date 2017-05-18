@@ -8,17 +8,24 @@ using UnityEngine;
 public class MouseManager : MonoBehaviour {
 
     /**
+     *  Private Properties:
+     *      _ShipRoot       The ship root GameObject instantiated.
+     */
+
+    private GameObject _ShipRoot;
+
+    /**
      *  Public Properties
      *      PrefabToSpawn           The Prefab of the part to be spawned on click.
      *      SnapPointLayerMask      The layer mask to determine what snap points are.
      *      ComponentKeybindDialog  The window that will display to set key binds.
-     *      ShipRoot                The root ship GameObject.
+     *      ShipRoots               An array of two root ship GameObjects.
      *      TheCamera               The main camera.
      */
     public GameObject PrefabToSpawn;
     public LayerMask SnapPointLayerMask;
     public ComponentKeybindDialog ComponentKeybindDialog;
-    public GameObject ShipRoot;
+    public GameObject[] ShipRoots;
     public Camera TheCamera;
 
     /// <summary>
@@ -207,7 +214,7 @@ public class MouseManager : MonoBehaviour {
     public void SetMode_Edit()
     {
         // Show all snap points
-        SetSnapPointEnabled(ShipRoot.transform, true);
+        SetSnapPointEnabled(_ShipRoot.transform, true);
 
         // Unlock the camera control.
         TheCamera.transform.parent.SetParent(null);
@@ -221,10 +228,10 @@ public class MouseManager : MonoBehaviour {
     public void SetMode_Flight()
     {
         // Hide all snap points
-        SetSnapPointEnabled(ShipRoot.transform, false);
+        SetSnapPointEnabled(_ShipRoot.transform, false);
 
         // Tell the camera to lock to ship root.
-        TheCamera.transform.parent.SetParent(ShipRoot.transform);
+        TheCamera.transform.parent.SetParent(_ShipRoot.transform);
         TheCamera.transform.parent.localPosition = Vector3.zero;
         CameraManager cm = TheCamera.GetComponent<CameraManager>();
         cm.SetMode(Mode.Flight);
@@ -260,6 +267,14 @@ public class MouseManager : MonoBehaviour {
         {
             SetSnapPointEnabled(t.GetChild(i), setToActive);
         }
+    }
+
+    void Start()
+    {
+        int shipIndex = PlayerPrefs.GetInt("shipIndex");
+        _ShipRoot = ShipRoots[shipIndex];
+
+        Instantiate(_ShipRoot, Vector3.zero, Quaternion.identity);
     }
 
     /// <summary>

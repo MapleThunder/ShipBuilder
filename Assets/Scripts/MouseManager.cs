@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// This class will handle the mouse interactions.
@@ -23,6 +24,7 @@ public class MouseManager : MonoBehaviour {
      *      TheCamera               The main camera.
      */
     public GameObject PrefabToSpawn;
+    public Text CurrentPartText;
     public LayerMask SnapPointLayerMask;
     public ComponentKeybindDialog ComponentKeybindDialog;
     public GameObject[] ShipRoots;
@@ -236,6 +238,13 @@ public class MouseManager : MonoBehaviour {
         CameraManager cm = TheCamera.GetComponent<CameraManager>();
         cm.SetMode(Mode.Flight);
 
+    }
+
+    public void SetPrefabToSpawn(GameObject prefab)
+    {
+        PrefabToSpawn = prefab;
+        Text txt = CurrentPartText.GetComponent<Text>();
+        txt.text = prefab.name;
     }
 
     /// <summary>

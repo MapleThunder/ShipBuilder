@@ -2409,11 +2409,11 @@ RectTransform:
   m_Father: {fileID: 733325965}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 186, y: -30}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 372, y: 30}
-  m_Pivot: {x: 0.5, y: 0}
+  m_Pivot: {x: 0, y: 0}
 --- !u!114 &1625365789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2429,12 +2429,6 @@ MonoBehaviour:
     type: 2}
   SubMenuButtonPrefab: {fileID: 1951994618775186, guid: 43c87e9572b0f9440adc49c0115c0aff,
     type: 2}
-  ShipPartPrefabs:
-  - {fileID: 1871563843974366, guid: 9335c04265dd76340b4f13a202aedf25, type: 2}
-  - {fileID: 1664665491343716, guid: f732ff4665610f34786bab9bd197c269, type: 2}
-  - {fileID: 1842359518690244, guid: b724aa02c1098584795237be90443057, type: 2}
-  - {fileID: 1324065663495264, guid: ad01e23fd25f9244196f8b97a500f824, type: 2}
-  - {fileID: 1075042963225724, guid: cff015bd300ab31458fad5954656c37f, type: 2}
   MovementPrefabs:
   - {fileID: 1324065663495264, guid: ad01e23fd25f9244196f8b97a500f824, type: 2}
   - {fileID: 1075042963225724, guid: cff015bd300ab31458fad5954656c37f, type: 2}

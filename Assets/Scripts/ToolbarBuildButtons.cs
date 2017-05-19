@@ -10,7 +10,6 @@ public class ToolbarBuildButtons : MonoBehaviour
      *      _OpenMenu       An int to indicate which menu is currently open.
      *                      It relates to the MenuNames index, -1 is none open.
      */
-    int _OpenMenu = -1;
     MouseManager _MM;
     Canvas _Canvas;
     RectTransform _SubMenuArea;
@@ -36,6 +35,16 @@ public class ToolbarBuildButtons : MonoBehaviour
     void OpenMenu(GameObject btnGameObject)
     {
         GameObject[] contents = null;
+        // Clear any buttons that may be in the _SubMenuArea
+        int childCount = _SubMenuArea.childCount;
+        if(childCount > 0)
+        {
+            for(int i = 0; i < childCount; i++)
+            {
+                Destroy(_SubMenuArea.GetChild(i).gameObject);
+            }
+        }
+
         /** To get the 4 corners for the clicked button I use the 
          * RectTransform.GetWorldCorners(Vector3[] fourCornersArray).
          * World corners are clockwise starting at Bottom Left.
@@ -59,11 +68,9 @@ public class ToolbarBuildButtons : MonoBehaviour
         {
             case "Structure":
                 contents = StructurePrefabs;
-                _OpenMenu = 0;
                 break;
             case "Movement":
                 contents = MovementPrefabs;
-                _OpenMenu = 1;
                 break;
         }
 
@@ -71,7 +78,6 @@ public class ToolbarBuildButtons : MonoBehaviour
         {
             // No sub-menu contents
             Debug.LogError("ToolbarBuildButtons::OpenMenu ->>> Sub-menu content array is null.");
-            _OpenMenu = -1;
             return;
         }
         

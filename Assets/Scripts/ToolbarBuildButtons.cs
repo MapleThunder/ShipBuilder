@@ -18,12 +18,10 @@ public class ToolbarBuildButtons : MonoBehaviour
     /**
      *  Public Properties:
      *      BuildButtonPrefab   Prefab for the Menu buttons in the toolbar.
-     *      ShipPartPrefabs     A list of Ship Part Prefabs
+     *      
      */
     public GameObject BuildButtonPrefab;
     public GameObject SubMenuButtonPrefab;
-    public Text CurrentPartText;
-    public GameObject[] ShipPartPrefabs;
     public GameObject[] MovementPrefabs;
     public GameObject[] StructurePrefabs;
     public string[] MenuNames;
@@ -34,8 +32,8 @@ public class ToolbarBuildButtons : MonoBehaviour
     /// Opens the sub menu for a toolbar button.
     /// </summary>
     /// <param name="menuName"></param>
-    /// <param name="theButton"></param>
-    void OpenMenu(Button theButton)
+    /// <param name="btnGameObject"></param>
+    void OpenMenu(GameObject btnGameObject)
     {
         GameObject[] contents = null;
         /** To get the 4 corners for the clicked button I use the 
@@ -46,57 +44,58 @@ public class ToolbarBuildButtons : MonoBehaviour
          * worldCorners[2] == Top Right
          * worldCorners[3] == Bottom Right
          */
-        RectTransform btnTrans = (RectTransform)theButton.transform;
+        RectTransform btnTrans = (RectTransform)btnGameObject.transform;
         Vector3[] buttonCorners = new Vector3[4];
         btnTrans.GetWorldCorners(buttonCorners);
         // Find corners of the sub menu area
         Vector3[] subMenuAreaCorners = new Vector3[4];
         _SubMenuArea.GetWorldCorners(subMenuAreaCorners);
 
-        string menuName = theButton.name;
+        string menuName = btnGameObject.name;
 
-        Debug.Log("ToolbarBuildButtons::OpenMenu ->>> Button Coords: " + buttonCorners[1]);
+        Debug.Log("ToolbarBuildButtons::OpenMenu ->>> Sub Menu WorldCorner[0]: " + subMenuAreaCorners[0]);
 
         switch (menuName)
         {
             case "Structure":
                 contents = StructurePrefabs;
+                _OpenMenu = 0;
                 break;
             case "Movement":
                 contents = MovementPrefabs;
+                _OpenMenu = 1;
                 break;
         }
 
         if (contents == null)
         {
             // No sub-menu contents
-            Debug.LogError("ToolbarBuildButtons::OpenMenu ->>> contents == null");
+            Debug.LogError("ToolbarBuildButtons::OpenMenu ->>> Sub-menu content array is null.");
+            _OpenMenu = -1;
             return;
         }
-
-        Text txt = CurrentPartText.GetComponent<Text>();
+        
         float btnHeight = buttonCorners[1].y;
 
         for (int i = 0; i < contents.Length; i++)
         {
-            GameObject buttonGameObject = Instantiate(SubMenuButtonPrefab, Vector3.zero, Quaternion.identity, _SubMenuArea);
+            GameObject buttonGameObject = Instantiate(SubMenuButtonPrefab, _SubMenuArea);
+            Debug.Log("ToolbarBuildButtons::OpenMenu ->>> Sub Menu Button["+ i +"] transform: " + buttonGameObject.transform.position);
             // Set the names and labels for the button.
             buttonGameObject.name = contents[i].name;
             Text buttonLabel = buttonGameObject.GetComponentInChildren<Text>();
             buttonLabel.text = contents[i].name;
 
             RectTransform btnRect = (RectTransform)buttonGameObject.transform;
-            // Set the anchors of the button to the top left of the screen.
-            btnRect.anchorMin = new Vector2(0.0f, 1.0f);
-            btnRect.anchorMax = new Vector2(0.0f, 1.0f);
 
             // Set pivot to bottom left from center and adjust position.
-            btnRect.anchoredPosition = new Vector2(0.0f, 0.0f);
-            Debug.Log("ToolbarBuildButtons::OpenMenu ->>> Sub button rect: " + buttonCorners[1].x);
-            btnRect.position = new Vector3(buttonCorners[1].x, btnHeight * i);
+            btnRect.pivot = new Vector2(0.0f, 0.0f);
+            btnRect.anchoredPosition = new Vector2(0.0f, 0f);
+            btnRect.position = new Vector3(buttonCorners[0].x, btnHeight + (btnHeight * i));
 
             // Add OnClickListener to change the PrefabToSpawn and CurrentPartText.
             Button partSelection = buttonGameObject.GetComponent<Button>();
+            Debug.Log("ToolbarBuildButtons:: OpenMenu ->>> Contents[" + i + "]: " + contents[i]);
             partSelection.onClick.AddListener(() => { _MM.SetPrefabToSpawn(contents[i]); });
 
         }
@@ -125,7 +124,7 @@ public class ToolbarBuildButtons : MonoBehaviour
             Button theButton = buttonGameObject.GetComponent<Button>();
             
             // Set up the OnClickListener
-            theButton.onClick.AddListener( () => { this.OpenMenu(theButton); } );
+            theButton.onClick.AddListener( () => { this.OpenMenu(buttonGameObject); } );
         }
 
     }

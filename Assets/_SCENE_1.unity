@@ -2176,7 +2176,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 0
+    m_Left: 20
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
@@ -2429,7 +2429,6 @@ MonoBehaviour:
     type: 2}
   SubMenuButtonPrefab: {fileID: 1951994618775186, guid: 43c87e9572b0f9440adc49c0115c0aff,
     type: 2}
-  CurrentPartText: {fileID: 1222449317}
   ShipPartPrefabs:
   - {fileID: 1871563843974366, guid: 9335c04265dd76340b4f13a202aedf25, type: 2}
   - {fileID: 1664665491343716, guid: f732ff4665610f34786bab9bd197c269, type: 2}

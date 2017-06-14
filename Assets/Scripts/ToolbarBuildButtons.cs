@@ -9,9 +9,11 @@ public class ToolbarBuildButtons : MonoBehaviour
      *  Private Properties:
      *      _MM                 A reference to the MouseManager.
      *      _SubMenuArea        The transform representing the area a submenu can appera in.
+     *      _OpenMenu           Holds the name of the currently open menu. ("-" is no menu open)
      */
     MouseManager _MM;
     RectTransform _SubMenuArea;
+    string _OpenMenu = "-";
 
     /**
      *  Public Properties:
@@ -64,12 +66,21 @@ public class ToolbarBuildButtons : MonoBehaviour
 
         // Determine which menu was pressed.
         string menuName = btnGameObject.name;
+        // If you clicked the menu button for the currently open menu...
+        if(menuName == _OpenMenu)
+        {
+            _OpenMenu = "-";
+            return;
+        }
+
         switch (menuName)
         {
             case "Structure":
                 contents = StructurePrefabs;
+                _OpenMenu = "Structure";
                 break;
             case "Movement":
+                _OpenMenu = "Movement";
                 contents = MovementPrefabs;
                 break;
         }
@@ -80,6 +91,7 @@ public class ToolbarBuildButtons : MonoBehaviour
             Debug.LogError("ToolbarBuildButtons::OpenMenu ->>> Sub-menu content array is null.");
             return;
         }
+
         // Store the height of a button.
         float btnHeight = buttonCorners[1].y;
         // Create a button for every object in the contents array.

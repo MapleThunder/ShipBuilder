@@ -43,6 +43,7 @@ public class ObstacleCourse : MonoBehaviour {
     public Material CheckpointInactiveMat;
     public Material CheckpointPassedMat;
     public GameObject VictoryPanel;
+    public GameObject PausePanel;
     public Camera theCamera;
     public float TimeRemaining = 60.0f;
     public Text DiscountWonText;
@@ -173,8 +174,38 @@ public class ObstacleCourse : MonoBehaviour {
     {
         if(_CM.Mode == Mode.Flight)
             TimeRemaining -= Time.deltaTime;
+
+        if (Input.GetKey(KeyCode.P))
+        {
+            string prevMode = _CM.Mode.ToString();
+
+            if (prevMode != "Menu")
+                PlayerPrefs.SetString("PrevMode", prevMode);
+
+            _CM.SetMode(Mode.Menu);
+            PausePanel.SetActive(true);
+        }
 	}
 
+    public void Unpause()
+    {
+        string prevMode = PlayerPrefs.GetString("PrevMode");
+
+        Mode pMode = Mode.Menu;
+        switch (prevMode)
+        {
+            case "Edit":
+                pMode = Mode.Edit;
+                break;
+            case "Flight":
+                pMode = Mode.Flight;
+                break;
+        }
+        
+        _CM.SetMode(pMode);
+        PausePanel.SetActive(false);
+    }
+    
     /// <summary>
     /// Fires when you complete the course.
     /// </summary>

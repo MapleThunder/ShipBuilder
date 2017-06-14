@@ -7,17 +7,19 @@ public class ToolbarBuildButtons : MonoBehaviour
 {
     /**
      *  Private Properties:
-     *      _OpenMenu       An int to indicate which menu is currently open.
-     *                      It relates to the MenuNames index, -1 is none open.
+     *      _MM                 A reference to the MouseManager.
+     *      _SubMenuArea        The transform representing the area a submenu can appera in.
      */
     MouseManager _MM;
-    Canvas _Canvas;
     RectTransform _SubMenuArea;
 
     /**
      *  Public Properties:
-     *      BuildButtonPrefab   Prefab for the Menu buttons in the toolbar.
-     *      
+     *      BuildButtonPrefab       Prefab for the Menu buttons in the toolbar.
+     *      SubMenuButtonPrefab     Prefab for the sub menu buttons in the toolbar.
+     *      MovementPrefabs         An array of prefabs for the objects that move the ship.
+     *      StructurePrefabs        An array of prefabs for the objects that make up the structure of the ship.
+     *      MenuNames               A string array of the names for each menu.
      */
     public GameObject BuildButtonPrefab;
     public GameObject SubMenuButtonPrefab;
@@ -60,10 +62,8 @@ public class ToolbarBuildButtons : MonoBehaviour
         Vector3[] subMenuAreaCorners = new Vector3[4];
         _SubMenuArea.GetWorldCorners(subMenuAreaCorners);
 
+        // Determine which menu was pressed.
         string menuName = btnGameObject.name;
-
-        Debug.Log("ToolbarBuildButtons::OpenMenu ->>> Sub Menu WorldCorner[0]: " + subMenuAreaCorners[0]);
-
         switch (menuName)
         {
             case "Structure":
@@ -80,33 +80,32 @@ public class ToolbarBuildButtons : MonoBehaviour
             Debug.LogError("ToolbarBuildButtons::OpenMenu ->>> Sub-menu content array is null.");
             return;
         }
-        
+        // Store the height of a button.
         float btnHeight = buttonCorners[1].y;
-
+        // Create a button for every object in the contents array.
         for (int i = 0; i < contents.Length; i++)
         {
             GameObject buttonGameObject = Instantiate(SubMenuButtonPrefab, _SubMenuArea);
-            Debug.Log("ToolbarBuildButtons::OpenMenu ->>> Sub Menu Button["+ i +"] transform: " + buttonGameObject.transform.position);
             // Set the names and labels for the button.
             buttonGameObject.name = contents[i].name;
             Text buttonLabel = buttonGameObject.GetComponentInChildren<Text>();
             buttonLabel.text = contents[i].name;
 
             RectTransform btnRect = (RectTransform)buttonGameObject.transform;
-
             // Set pivot to bottom left from center and adjust position.
             btnRect.pivot = new Vector2(0.0f, 0.0f);
             btnRect.anchoredPosition = new Vector2(0.0f, 0f);
             btnRect.position = new Vector3(buttonCorners[0].x, btnHeight + (btnHeight * i));
 
-            // Add OnClickListener to change the PrefabToSpawn and CurrentPartText.
+            // Add OnClickListener to change the PrefabToSpawn and another to call SetCurrentPartText().
             Button partSelection = buttonGameObject.GetComponent<Button>();
-            Debug.Log("ToolbarBuildButtons:: OpenMenu ->>> Contents[" + i + "]: " + contents[i]);
-            partSelection.onClick.AddListener(() => { _MM.SetPrefabToSpawn(contents[i]); });
-
+            GameObject holder = contents[i];
+            partSelection.onClick.AddListener(() => { _MM.PrefabToSpawn = holder; });
+            partSelection.onClick.AddListener(() => { _MM.SetCurrentPartText(); });
         }
 
-    } // End OpenMenu
+    } /* End OpenMenu */
+
 
     /// <summary>
     /// Use this for initialization
@@ -115,7 +114,6 @@ public class ToolbarBuildButtons : MonoBehaviour
     {
         // Grab all needed private variables
         _MM = GameObject.FindObjectOfType<MouseManager>();
-        _Canvas = GameObject.FindObjectOfType<Canvas>();
         _SubMenuArea = (RectTransform)GameObject.Find("Sub Menu Area").transform;
 
         // Populate the category menu buttons
@@ -133,8 +131,6 @@ public class ToolbarBuildButtons : MonoBehaviour
             theButton.onClick.AddListener( () => { this.OpenMenu(buttonGameObject); } );
         }
 
-    }
-
-   
+    } /* End Start() */
 	
-}
+} /* End ToolbarBuildButtons */

@@ -65,7 +65,7 @@ public class MouseManager : MonoBehaviour {
             theCollider.GetComponent<Renderer>().enabled = false;
         if (theCollider.GetComponent<Collider>())
             theCollider.GetComponent<Collider>().enabled = false;
-    }
+    } /* End AddPart(Collider) */
 
     /// <summary>
     /// Adds a selected part to the ship.
@@ -123,8 +123,8 @@ public class MouseManager : MonoBehaviour {
         {
             AddPart(theCollider);
         }
-        
-    }
+
+    } /* End CheckLeftClick() */
 
     /// <summary>
     /// Checks for what is under the pointer at time of click, and
@@ -155,8 +155,8 @@ public class MouseManager : MonoBehaviour {
 
         // If it gets here, I have right-clicked on something keybindable.
         ComponentKeybindDialog.OpenDialog(kc);
-        
-    }
+
+    } /* End CheckRightClick() */
 
     /// <summary>
     /// Returns the collider of whatever is hit by a ray.
@@ -174,7 +174,7 @@ public class MouseManager : MonoBehaviour {
         }
 
         return null;
-    }
+    } /* End DoRaycast() */
 
     /// <summary>
     /// Finds the ship part parent of the collider.
@@ -196,7 +196,7 @@ public class MouseManager : MonoBehaviour {
         }
 
         return null;
-    }
+    } /* End FindShipPart */
 
     /// <summary>
     /// Removes a part, and all child parts.
@@ -208,7 +208,7 @@ public class MouseManager : MonoBehaviour {
         go.transform.parent.GetComponent<Collider>().enabled = true;
 
         Destroy(go);
-    }
+    } /* End RemovePart */
 
     /// <summary>
     /// Unlocks the camera, shows snap points, and enables right-click functionality.
@@ -222,7 +222,7 @@ public class MouseManager : MonoBehaviour {
         TheCamera.transform.parent.SetParent(null);
         CameraManager cm = TheCamera.GetComponent<CameraManager>();
         cm.SetMode(Mode.Edit);
-    }
+    } /* End SetMode_Edit() */
 
     /// <summary>
     /// Locks the camera to prepare for flight and hides snap points.
@@ -238,14 +238,15 @@ public class MouseManager : MonoBehaviour {
         CameraManager cm = TheCamera.GetComponent<CameraManager>();
         cm.SetMode(Mode.Flight);
 
-    }
+    } /* End SetMode_Flight() */
 
-    public void SetPrefabToSpawn(GameObject prefab)
+    /// <summary>
+    /// Sets the CurrentPartText label with the name of the current PrefabToSpawn.
+    /// </summary>
+    public void SetCurrentPartText()
     {
-        PrefabToSpawn = prefab;
-        Text txt = CurrentPartText.GetComponent<Text>();
-        txt.text = prefab.name;
-    }
+        CurrentPartText.GetComponent<Text>().text = "Current Part: " + PrefabToSpawn.name;
+    } /* End SetCurrentPartText */
 
     /// <summary>
     /// Enables a snap point.
@@ -276,7 +277,7 @@ public class MouseManager : MonoBehaviour {
         {
             SetSnapPointEnabled(t.GetChild(i), setToActive);
         }
-    }
+    } /* End SetSnapPointEnabled(Transform, bool) */
 
     void Start()
     {
@@ -284,7 +285,8 @@ public class MouseManager : MonoBehaviour {
         _ShipRoot = ShipRoots[shipIndex];
 
         Instantiate(_ShipRoot, Vector3.zero, Quaternion.identity);
-    }
+        SetSnapPointEnabled(_ShipRoot.transform, true);
+    } /* End Start() */
 
     /// <summary>
     /// Update is called once per frame
@@ -300,5 +302,6 @@ public class MouseManager : MonoBehaviour {
         {
             CheckRightClick();
         }
-	} // End Update
-}
+	} /* End Update */
+
+} /* End MouseManager */
